@@ -50,6 +50,11 @@ const Data = styled.div`
 const Title = styled.h3`
   font-size: 32px;
   font-weight: 600;
+  margin-bottom: 12px;
+`;
+
+const Tagline = styled.span`
+  font-size: 12px;
   margin-bottom: 20px;
 `;
 
@@ -114,6 +119,29 @@ const Overview = styled.p`
   width: 70%;
 `;
 
+const CreatorContainer = styled.div`
+  width: 70%;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+`;
+
+const Creator = styled.figure`
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-right: 8px;
+`;
+
+const CreatorPoster = styled.img`
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  height: 200px;
+`;
+
+const CreatorCaption = styled.figcaption`
+  text-align: center;
+  padding: 4px;
+`;
 const SeasonContainer = styled.div`
   width: 70%;
   display: flex;
@@ -184,7 +212,7 @@ const DetailPresenter = ({ result, loading, error }) =>
               ? result.original_title
               : result.original_name}
           </Title>
-
+          <Tagline>{result.tagline}</Tagline>
           <ItemContainer>
             {result.imdb_id ? (
               <IMDb
@@ -254,6 +282,27 @@ const DetailPresenter = ({ result, loading, error }) =>
                   ></Video>
                 ))}
               </VideoContainer>
+            </>
+          )}
+          {result.created_by && result.created_by.length > 0 && (
+            <>
+              <SubHeading>Creators</SubHeading>
+              <CreatorContainer>
+                {result.created_by.map((creator, index) => (
+                  <Creator>
+                    <CreatorPoster
+                      key={index}
+                      src={
+                        creator.profile_path
+                          ? `https://image.tmdb.org/t/p/original${creator.profile_path}`
+                          : require("../../assets/noPosterSmall.png")
+                      }
+                      alt={creator.name}
+                    />
+                    <CreatorCaption>{creator.name}</CreatorCaption>
+                  </Creator>
+                ))}
+              </CreatorContainer>
             </>
           )}
           {result.seasons && result.seasons.length > 0 && (
