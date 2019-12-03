@@ -5,7 +5,7 @@ import Helmet from "react-helmet";
 import Loader from "Components/Loader";
 
 const Container = styled.div`
-  height: calc(100vh - 50px);
+  height: calc(100vh - 100px);
   width: 100%;
   position: relative;
   padding: 50px;
@@ -20,8 +20,8 @@ const Backdrop = styled.div`
   background-image: url(${props => props.bgImage});
   background-position: center center;
   background-size: cover;
-  filter: blur(3px);
-  opacity: 0.5;
+  filter: blur(4px);
+  opacity: 0.4;
   z-index: 0;
 `;
 
@@ -44,11 +44,13 @@ const Cover = styled.div`
 
 const Data = styled.div`
   width: 70%;
-  margin-left: 10px;
+  margin-left: 20px;
 `;
 
 const Title = styled.h3`
   font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
 `;
 
 const ItemContainer = styled.div`
@@ -81,19 +83,30 @@ const ProductionContainer = styled.div`
 const Production = styled.span``;
 
 const ProductionLogo = styled.img`
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   padding: 4px 4px;
   margin-right: 4px;
   height: 24px;
 `;
 
+const YoutubeContainer = styled.div`
+  width: 70%;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: scroll;
+`;
+
+const Youtube = styled.iframe`
+  margin-right: 4px;
+`;
+
 const Overview = styled.p`
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 16px;
   opacity: 0.7;
   line-height: 1.5;
-  width: 50%;
+  width: 70%;
 `;
 
 function emoji(country) {
@@ -194,6 +207,19 @@ const DetailPresenter = ({ result, loading, error }) =>
                 ) : null
               )}
           </ProductionContainer>
+          <YoutubeContainer>
+            {result.videos.results &&
+              result.videos.results.map(video => (
+                <Youtube
+                  width="300"
+                  height="200"
+                  src={`https://www.youtube.com/embed/${video.key}?controls=0`}
+                  frameborder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></Youtube>
+              ))}
+          </YoutubeContainer>
           <Overview>{result.overview}</Overview>
         </Data>
       </Content>
