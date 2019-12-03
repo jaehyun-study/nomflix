@@ -51,17 +51,8 @@ const Title = styled.h3`
   font-size: 32px;
 `;
 
-const IMDb = styled.a`
-  padding: 0px 8px;
-  margin-right: 8px;
-  background-color: rgb(245, 197, 24);
-  color: black;
-  font-weight: 900;
-  border-radius: 2px;
-`;
-
 const ItemContainer = styled.div`
-  margin: 20px 0;
+  margin: 16px 0;
 `;
 
 const Item = styled.span``;
@@ -70,12 +61,53 @@ const Divider = styled.span`
   margin: 0 4px;
 `;
 
+const IMDb = styled.a`
+  padding: 0px 8px;
+  background-color: rgb(245, 197, 24);
+  color: black;
+  font-weight: 900;
+  border-radius: 2px;
+`;
+
+const Country = styled.span`
+  margin: 0px 4px;
+`;
+
+const ProductionContainer = styled.div`
+  margin: 12px 0;
+  display: flex;
+  flex-wrap: nowrap;
+`;
+const Production = styled.span``;
+
+const ProductionLogo = styled.img`
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  padding: 4px 4px;
+  margin-right: 4px;
+  height: 24px;
+`;
+
 const Overview = styled.p`
-  font-size: 12px;
+  margin-top: 20px;
+  font-size: 14px;
   opacity: 0.7;
   line-height: 1.5;
   width: 50%;
 `;
+
+function emoji(country) {
+  const offset = 127397;
+  const A = 65;
+  const Z = 90;
+  const f = country.codePointAt(0);
+  const s = country.codePointAt(1);
+  if (country.length !== 2 || f > Z || f < A || s > Z || s < A) {
+    return null;
+  } else {
+    return String.fromCodePoint(f + offset) + String.fromCodePoint(s + offset);
+  }
+}
 
 const DetailPresenter = ({ result, loading, error }) =>
   loading ? (
@@ -112,13 +144,25 @@ const DetailPresenter = ({ result, loading, error }) =>
           </Title>
 
           <ItemContainer>
-            { result.imdb_id ? (
-            <IMDb
-              href={`https://www.imdb.com/title/${result.imdb_id}/`}
-              target="_blank"
-            >
-              IMDb
-            </IMDb>):null}
+            {result.imdb_id ? (
+              <IMDb
+                href={`https://www.imdb.com/title/${result.imdb_id}/`}
+                target="_blank"
+              >
+                IMDb
+              </IMDb>
+            ) : null}
+            {result.production_countries ? (
+              <Country>
+                {result.production_countries.map((country, index) =>
+                  emoji(country.iso_3166_1)
+                )}
+              </Country>
+            ) : result.origin_country ? (
+              <Country>
+                {result.origin_country.map((country, index) => emoji(country))}
+              </Country>
+            ) : null}
             <Item>
               {result.release_date
                 ? result.release_date.substring(0, 4)
@@ -138,6 +182,18 @@ const DetailPresenter = ({ result, loading, error }) =>
                 )}
             </Item>
           </ItemContainer>
+          <ProductionContainer>
+            {result.production_companies &&
+              result.production_companies.map((production_companie, index) =>
+                production_companie.logo_path ? (
+                  <ProductionLogo
+                    key={index}
+                    src={`https://image.tmdb.org/t/p/original${production_companie.logo_path}`}
+                    alt={production_companie.name}
+                  />
+                ) : null
+              )}
+          </ProductionContainer>
           <Overview>{result.overview}</Overview>
         </Data>
       </Content>
