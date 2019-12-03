@@ -77,36 +77,65 @@ const Country = styled.span`
 
 const ProductionContainer = styled.div`
   margin: 12px 0;
+  width: 70%;
   display: flex;
   flex-wrap: nowrap;
+  overflow: scroll;
 `;
-const Production = styled.span``;
-
-const ProductionLogo = styled.img`
+const Production = styled.img`
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   padding: 4px 4px;
   margin-right: 4px;
-  height: 24px;
+  height: 30px;
 `;
 
-const YoutubeContainer = styled.div`
+const SubHeading = styled.h4`
+  margin: 32px 0px 12px;
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const VideoContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
   overflow: scroll;
 `;
 
-const Youtube = styled.iframe`
-  margin-right: 4px;
+const Video = styled.iframe`
+  margin-right: 8px;
 `;
 
 const Overview = styled.p`
-  margin-top: 20px;
   font-size: 16px;
   opacity: 0.7;
   line-height: 1.5;
   width: 70%;
+`;
+
+const SeasonContainer = styled.div`
+  width: 70%;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: scroll;
+`;
+
+const Season = styled.figure`
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  margin-right: 8px;
+`;
+
+const SeasonPoster = styled.img`
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  height: 200px;
+`;
+
+const SeasonCaption = styled.figcaption`
+  text-align: center;
+  padding: 4px;
 `;
 
 function emoji(country) {
@@ -178,8 +207,9 @@ const DetailPresenter = ({ result, loading, error }) =>
             ) : null}
             <Item>
               {result.release_date
-                ? result.release_date.substring(0, 4)
-                : result.first_air_date.substring(0, 4)}
+                ? result.release_date && result.release_date.substring(0, 4)
+                : result.first_air_date &&
+                  result.first_air_date.substring(0, 4)}
             </Item>
             <Divider>•</Divider>
             <Item>
@@ -199,7 +229,7 @@ const DetailPresenter = ({ result, loading, error }) =>
             {result.production_companies &&
               result.production_companies.map((production_companie, index) =>
                 production_companie.logo_path ? (
-                  <ProductionLogo
+                  <Production
                     key={index}
                     src={`https://image.tmdb.org/t/p/original${production_companie.logo_path}`}
                     alt={production_companie.name}
@@ -207,20 +237,43 @@ const DetailPresenter = ({ result, loading, error }) =>
                 ) : null
               )}
           </ProductionContainer>
-          <YoutubeContainer>
+          <SubHeading>Overview</SubHeading>
+          <Overview>{result.overview}</Overview>
+          <SubHeading>Videos</SubHeading>
+          <VideoContainer>
             {result.videos.results &&
               result.videos.results.map(video => (
-                <Youtube
+                <Video
                   width="300"
                   height="200"
                   src={`https://www.youtube.com/embed/${video.key}?controls=0`}
                   frameborder="0"
                   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
-                ></Youtube>
+                ></Video>
               ))}
-          </YoutubeContainer>
-          <Overview>{result.overview}</Overview>
+          </VideoContainer>
+          {result.seasons && result.seasons.length > 0 && (
+            <>
+              <SubHeading>Seasons</SubHeading>
+              <SeasonContainer>
+                {result.seasons.map((season, index) => (
+                  <Season>
+                    <SeasonPoster
+                      key={index}
+                      src={
+                        season.poster_path
+                          ? `https://image.tmdb.org/t/p/original${season.poster_path}`
+                          : require("../../assets/noPosterSmall.png")
+                      }
+                      alt={season.name}
+                    />
+                    <SeasonCaption>{season.name}</SeasonCaption>
+                  </Season>
+                ))}
+              </SeasonContainer>
+            </>
+          )}
         </Data>
       </Content>
     </Container>
