@@ -80,7 +80,7 @@ const ProductionContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
 `;
 const Production = styled.img`
   background-color: rgba(255, 255, 255, 0.2);
@@ -100,7 +100,7 @@ const VideoContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
-  overflow: scroll;
+  overflow-x: auto;
 `;
 
 const Video = styled.iframe`
@@ -118,7 +118,7 @@ const SeasonContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
 `;
 
 const Season = styled.figure`
@@ -239,20 +239,23 @@ const DetailPresenter = ({ result, loading, error }) =>
           </ProductionContainer>
           <SubHeading>Overview</SubHeading>
           <Overview>{result.overview}</Overview>
-          <SubHeading>Videos</SubHeading>
-          <VideoContainer>
-            {result.videos.results &&
-              result.videos.results.map(video => (
-                <Video
-                  width="300"
-                  height="200"
-                  src={`https://www.youtube.com/embed/${video.key}?controls=0`}
-                  frameborder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></Video>
-              ))}
-          </VideoContainer>
+          {result.videos.results && result.videos.results.length > 0 && (
+            <>
+              <SubHeading>Videos</SubHeading>
+              <VideoContainer>
+                {result.videos.results.map(video => (
+                  <Video
+                    width="300"
+                    height="200"
+                    src={`https://www.youtube.com/embed/${video.key}?controls=0`}
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></Video>
+                ))}
+              </VideoContainer>
+            </>
+          )}
           {result.seasons && result.seasons.length > 0 && (
             <>
               <SubHeading>Seasons</SubHeading>
