@@ -51,6 +51,15 @@ const Title = styled.h3`
   font-size: 32px;
 `;
 
+const IMDb = styled.a`
+  padding: 0px 8px;
+  margin-right: 8px;
+  background-color: rgb(245, 197, 24);
+  color: black;
+  font-weight: 900;
+  border-radius: 2px;
+`;
+
 const ItemContainer = styled.div`
   margin: 20px 0;
 `;
@@ -58,7 +67,7 @@ const ItemContainer = styled.div`
 const Item = styled.span``;
 
 const Divider = styled.span`
-  margin: 0 10px;
+  margin: 0 4px;
 `;
 
 const Overview = styled.p`
@@ -101,7 +110,15 @@ const DetailPresenter = ({ result, loading, error }) =>
               ? result.original_title
               : result.original_name}
           </Title>
+
           <ItemContainer>
+            { result.imdb_id ? (
+            <IMDb
+              href={`https://www.imdb.com/title/${result.imdb_id}/`}
+              target="_blank"
+            >
+              IMDb
+            </IMDb>):null}
             <Item>
               {result.release_date
                 ? result.release_date.substring(0, 4)
