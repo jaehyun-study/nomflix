@@ -80,7 +80,7 @@ const ProductionContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
-  overflow: scroll;
+  overflow-x: scroll;
 `;
 const Production = styled.img`
   background-color: rgba(255, 255, 255, 0.2);
@@ -118,7 +118,7 @@ const SeasonContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
-  overflow: scroll;
+  overflow-x: scroll;
 `;
 
 const Season = styled.figure`
