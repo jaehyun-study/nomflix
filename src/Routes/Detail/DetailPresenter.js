@@ -34,16 +34,16 @@ const Content = styled.div`
 `;
 
 const Cover = styled.div`
-  width: 30%;
+  width: 40%;
   background-image: url(${props => props.bgImage});
   background-position: center center;
   background-size: cover;
-  height: 100%;
+  height: 80%;
   border-radius: 5px;
 `;
 
 const Data = styled.div`
-  width: 70%;
+  width: 60%;
   margin-left: 20px;
 `;
 
@@ -119,49 +119,26 @@ const Overview = styled.p`
   width: 70%;
 `;
 
-const CreatorContainer = styled.div`
+const FigureContainer = styled.div`
   width: 70%;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
 `;
 
-const Creator = styled.figure`
+const Figure = styled.figure`
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
   margin-right: 8px;
 `;
 
-const CreatorPoster = styled.img`
+const FigurePoster = styled.img`
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   height: 200px;
 `;
 
-const CreatorCaption = styled.figcaption`
-  text-align: center;
-  padding: 4px;
-`;
-const SeasonContainer = styled.div`
-  width: 70%;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-`;
-
-const Season = styled.figure`
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  margin-right: 8px;
-`;
-
-const SeasonPoster = styled.img`
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  height: 200px;
-`;
-
-const SeasonCaption = styled.figcaption`
+const FigureCaption = styled.figcaption`
   text-align: center;
   padding: 4px;
 `;
@@ -179,7 +156,7 @@ function emoji(country) {
   }
 }
 
-const DetailPresenter = ({ result, loading, error }) =>
+const DetailPresenter = ({ result, collection, loading, error }) =>
   loading ? (
     <>
       <Helmet>
@@ -241,7 +218,12 @@ const DetailPresenter = ({ result, loading, error }) =>
             </Item>
             <Divider>•</Divider>
             <Item>
-              {result.runtime ? result.runtime : result.episode_run_time[0]} min
+              {result.runtime
+                ? result.runtime
+                : result.episode_run_time
+                ? result.episode_run_time[0]
+                : "?"}{" "}
+              min
             </Item>
             <Divider>•</Divider>
             <Item>
@@ -273,6 +255,7 @@ const DetailPresenter = ({ result, loading, error }) =>
               <VideoContainer>
                 {result.videos.results.map(video => (
                   <Video
+                    key={video.key}
                     width="300"
                     height="200"
                     src={`https://www.youtube.com/embed/${video.key}?controls=0`}
@@ -287,10 +270,10 @@ const DetailPresenter = ({ result, loading, error }) =>
           {result.created_by && result.created_by.length > 0 && (
             <>
               <SubHeading>Creators</SubHeading>
-              <CreatorContainer>
+              <FigureContainer>
                 {result.created_by.map((creator, index) => (
-                  <Creator>
-                    <CreatorPoster
+                  <Figure>
+                    <FigurePoster
                       key={index}
                       src={
                         creator.profile_path
@@ -299,19 +282,19 @@ const DetailPresenter = ({ result, loading, error }) =>
                       }
                       alt={creator.name}
                     />
-                    <CreatorCaption>{creator.name}</CreatorCaption>
-                  </Creator>
+                    <FigureCaption>{creator.name}</FigureCaption>
+                  </Figure>
                 ))}
-              </CreatorContainer>
+              </FigureContainer>
             </>
           )}
           {result.seasons && result.seasons.length > 0 && (
             <>
               <SubHeading>Seasons</SubHeading>
-              <SeasonContainer>
+              <FigureContainer>
                 {result.seasons.map((season, index) => (
-                  <Season>
-                    <SeasonPoster
+                  <Figure>
+                    <FigurePoster
                       key={index}
                       src={
                         season.poster_path
@@ -320,10 +303,31 @@ const DetailPresenter = ({ result, loading, error }) =>
                       }
                       alt={season.name}
                     />
-                    <SeasonCaption>{season.name}</SeasonCaption>
-                  </Season>
+                    <FigureCaption>{season.name}</FigureCaption>
+                  </Figure>
                 ))}
-              </SeasonContainer>
+              </FigureContainer>
+            </>
+          )}
+          {collection && collection.parts && collection.parts.length > 0 && (
+            <>
+              <SubHeading>Collections</SubHeading>
+              <FigureContainer>
+                {collection.parts.map((part, index) => (
+                  <Figure>
+                    <FigurePoster
+                      key={index}
+                      src={
+                        part.poster_path
+                          ? `https://image.tmdb.org/t/p/original${part.poster_path}`
+                          : require("../../assets/noPosterSmall.png")
+                      }
+                      alt={part.name}
+                    />
+                    <FigureCaption>{part.original_title}</FigureCaption>
+                  </Figure>
+                ))}
+              </FigureContainer>
             </>
           )}
         </Data>
@@ -333,6 +337,7 @@ const DetailPresenter = ({ result, loading, error }) =>
 
 DetailPresenter.propTypes = {
   result: PropTypes.object,
+  collection: PropTypes.object,
   loading: PropTypes.bool.isRequired,
   error: PropTypes.string
 };
