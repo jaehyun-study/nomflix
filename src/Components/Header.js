@@ -37,6 +37,14 @@ const SLink = styled(Link)`
   align-items: center;
 `;
 
+const ALink = styled.a`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export default withRouter(({ location: { pathname } }) => (
   <Header>
     <List>
@@ -48,6 +56,14 @@ export default withRouter(({ location: { pathname } }) => (
       </Item>
       <Item current={pathname === "/search"}>
         <SLink to="/search">Search</SLink>
+      </Item>
+      <Item>
+        <ALink
+          href="https://delphiforwin.blogspot.com/2020/03/nomadcoders-academy-challenges.html"
+          target="_blank"
+        >
+          Blog
+        </ALink>
       </Item>
     </List>
   </Header>
